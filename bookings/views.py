@@ -30,20 +30,6 @@ def property_detail(request, property_id):
     return render(request, 'bookings/property_detail.html', {'property': property, 'can_edit': can_edit})
 
 
-# @login_required(login_url='login')
-# def property_create(request):
-#     """Create a new property"""
-#     form = PropertyForm(request.POST, request.FILES)
-#     if request.method == 'POST' and form.is_valid():
-        
-#         property_obj = form.save(commit=False)
-#         property_obj.listed_by = request.user.profile  # Përdorni request.user.profile, jo request.user
-#         property_obj.save()
-#         messages.success(request, "Property created successfully!")
-#         return redirect('property_list')
-
-#     return render(request, 'bookings/property_form.html', {'form': form})
-
 @login_required(login_url='login')
 def property_create(request):
     """Create a new property"""
@@ -139,7 +125,7 @@ def booking_create(request, property_id):
             booking.save()
 
             # Ndryshoni statusin e pronës në 'reserved'
-            property_obj.is_available = False  # Mund ta lini këtu të jetë i papranueshëm për rezervime të tjera
+            property_obj.is_available = False  
             property_obj.status = 'reserved'  # Vendosim një status të ri për pronën
             property_obj.save()
 
@@ -169,10 +155,6 @@ def send_booking_notification(property_owner, booking_user, property_name, start
     
     # Krijo njoftimin për pronarin
     Notification.objects.create(user=property_owner, message=message)
-
-
-# def booking_success(request):
-#     return render(request, 'bookings/booking_success.html')
 
 
 @login_required
