@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Search for Available Properties</h2>
+
+        <!-- Formë e thjeshtë e kërkimit -->
+        <form method="GET" action="{% url 'search_properties' %}" class="row g-3">
+            <div class="col-md-4">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" id="location" name="location" class="form-control" placeholder="Enter location" value="{{ request.GET.location }}">
+            </div>
+            <div class="col-md-4">
+                <label for="start_date" class="form-label">Start Date</label>
+                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+            </div>
+            <div class="col-md-4">
+                <label for="end_date" class="form-label">End Date</label>
+                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+            </div>
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-4">
+        <h3>Available Properties</h3>
+        <div id="results" class="property-container">
+            {% for property in properties %}
+                <div class="property-item">
+                    <!-- Emri i pronës tani është një lidhje për të parë detajet -->
+                    <a href="{% url 'property_detail' property.id %}">
+                        <div class="property-image">
+                            <img src="{{ property.image.url }}" alt="{{ property.name }}">
+                        </div>
+                        <div class="property-info">
+                            <h4>{{ property.name }}</h4>
+                            <p>{{ property.location }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% empty %}
+                <div class="no-properties">
+                    <p>No properties available for the selected dates.</p>
+                </div>
+            {% endfor %}
+    </div>
+</div>
+{% endblock %}

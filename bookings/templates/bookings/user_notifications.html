@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notifications</title>
+</head>
+<body>
+    <h1>Te gjitha njoftimet</h1>
+    {% if notifications %}
+        <ul>
+            {% for notification in notifications %}
+                <li>
+                    <p>{{ notification.message }}</p>
+                    <small>Received at {{ notification.created_at }}</small>
+                    {% if not notification.is_read %}
+                        <a href="{% url 'mark_as_read' notification.id %}">Mark as Read</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Ju nuk keni asnjë njoftim.</p>
+    {% endif %}
+</body>
+</html>

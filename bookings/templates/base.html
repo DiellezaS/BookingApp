@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Real Estate App{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Inline CSS for styling -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            margin:40px
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .auth-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .auth-links li {
+            list-style: none;
+        }
+
+        .auth-links a {
+            color:rgb(175, 76, 150);
+            text-decoration: none;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .navbar-nav {
+            flex-direction: row;
+        }
+
+        .navbar-nav .nav-item {
+            margin-left: 10px;
+        }
+
+        /* Style for the notifications dropdown */
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            width: 250px;
+            z-index: 1000;
+        }
+
+
+        .notification-dropdown ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        .notification-dropdown ul li {
+            list-style: none;
+            padding: 10px;
+            border-bottom: 1px solidrgb(132, 127, 127);
+        }
+
+        .notification-dropdown ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .notification-dropdown ul li a:hover {
+            background-color: #f4f4f4;
+        }
+
+        .read {
+            font-style: italic;
+            color: #777;
+        }
+        .property-image {
+            width: 400px; /* Gjerësia e fotove do të jetë 400px */
+            height: auto; /* Për të ruajtur proporcionet e fotos */
+        }
+
+
+
+
+        .property-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px; /* Ndihmon për t'i dhënë hapësirë midis katrorëve */
+            justify-content: space-between;
+        }
+        
+        .property-item {
+            width: calc(33% - 10px); /* 3 katrorë në një rresht, me pak hapësirë mes tyre */
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .property-item:hover {
+            transform: scale(1.05); /* Efekti i hover për rritjen e madhësisë */
+        }
+        
+        .property-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover; /* Siguron që imazhi të mbushë hapësirën pa deformuar */
+        }
+        
+        .property-info {
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .property-info h4 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        
+        .property-info p {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .no-properties {
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+        }
+        {% comment %}  {% endcomment %}
+
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="{% url 'property_list' %}">BOOKING App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'property_list' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'property_create' %}">Add Property</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'search_properties' %}">Search Property</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn " href="{% url 'my_bookings' %}">Shiko Pronat e Rezervuara</a>
+                    </li>
+                    <li class="nav-item dropdown auth-links">
+                        {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'logout' %}" class="nav-link">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Logout</button>
+                            </form>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                            <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
+                        {% endif %}
+                    </li>
+
+                    <!-- Notifications Button -->
+                    <li class="nav-item">
+                        <button class="btn nav-link " id="notificationsButton" onclick="toggleNotifications()">Njoftimet</button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="notification-dropdown" id="notificationDropdown">
+        <ul>
+            {% for notification in notifications %}
+                <li>
+                    <a href="{% url 'mark_notification_as_read' notification.id %}" 
+                       {% if notification.is_read %} class="read" {% endif %}>
+                        {{ notification.message }}
+                    </a>
+                </li>
+            {% empty %}
+                <li><a href="#">Nuk ka njoftime.</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <main>
+        {% if messages %}
+            <div class="container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}
+        <!-- Content from the child templates will go here -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Real Estate App</p>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // JavaScript to toggle the visibility of the notifications dropdown
+        function toggleNotifications() {
+            var dropdown = document.getElementById('notificationDropdown');
+            dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
+        }
+    </script>
+</body>
+
+</html>

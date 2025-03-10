@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% comment %} {% block content %}
+<h2>Njoftimet Tuaja</h2>
+
+{% if notifications %}
+    <ul>
+        {% for notification in notifications %}
+            <li>
+                <p>{{ notification.message }}</p>
+                <small>{{ notification.created_at }}</small>
+                {% if not notification.is_read %}
+                    <a href="{% url 'mark_notification_as_read' notification.id %}">Mark as read</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Ju nuk keni njoftime ende.</p>
+{% endif %}
+
+{% endblock %} {% endcomment %}
+
+
+<!-- bookings/notifications.html -->
+
+
+{% block content %}
+  <div class="container">
+    <h2>All Notifications</h2>
+    
+    <!-- Kontrolloni nëse ka njoftime për shfaqje -->
+    {% if notifications %}
+      <ul class="list-group">
+        {% for notification in notifications %}
+          <li class="list-group-item{% if not notification.is_read %} list-group-item-warning{% endif %}">
+            <strong>{{ notification.created_at|date:"F j, Y, g:i a" }}</strong><br>
+            <p>{{ notification.message }}</p>
+            
+            {% if not notification.is_read %}
+              <a href="{% url 'mark_notification_as_read' notification.id %}" class="btn btn-primary btn-sm">
+                Mark as Read
+              </a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>You have no notifications at the moment.</p>
+    {% endif %}
+  </div>
+
+{% endblock %}

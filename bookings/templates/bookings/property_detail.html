@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+
+<h2>{{ property.name }}</h2>
+
+{% if property.image %}
+    <img src="{{ property.image.url }}" class="property-image" alt="{{ property.name }} image">
+{% else %}
+    <img src="{{ MEDIA_URL }}property_photos/default_image.jpg"class="property-image"  alt="Default image">
+{% endif %}
+
+<p>{{ property.description }}</p>
+<p><strong>Tipi:</strong> {{ property.get_property_type_display }}</p>
+<p><strong>Çmimi:</strong> ${{ property.price_per_night }} / nata</p>
+<p><strong>Vendndodhja:</strong> {{ property.location }}</p>
+<p><strong>Metra katrorë:</strong> {{ property.square_meters }} m²</p>
+<p><strong>Kapaciteti:</strong> {{ property.max_guests }} persona</p>
+<p><strong>Disponueshmëria:</strong> {% if property.is_available %}✅ Po{% else %}❌ Jo{% endif %}</p>
+<p><strong>Publikuar nga:</strong> {{ property.listed_by.user.username }}</p>
+<p><strong>Available from date:</strong> {{ property.start_date|date:"Y-m-d" }} to {{ property.end_date|date:"Y-m-d" }}</p>
+
+
+
+{% if request.user.is_authenticated and request.user.profile == property.listed_by %}
+    <a href="{% url 'property_update' property.id %}">✏️ Modifiko</a>
+    <a href="{% url 'property_delete' property.id %}" onclick="return confirm('A jeni i sigurt?');">🗑️ Fshi</a>
+{% endif %}
+
+{% if booking %}
+    {% if booking.user == request.user %}
+        <a href="{% url 'booking_update' booking.id %}">✏️ Modifiko rezervimin</a>
+        <a href="{% url 'booking_delete' booking.id %}" onclick="return confirm('A jeni i sigurt që dëshironi të anuloni rezervimin?');">❌ Anulo rezervimin</a>
+    {% endif %}
+{% else %}
+    {% if request.user.is_authenticated %}
+        <form action="{% url 'booking_create' property.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">🔒 Rezervo</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">🔑 Hyni për të rezervuar këtë pronë</a></p>
+    {% endif %}
+{% endif %}
+
+<a href="{% url 'property_list' %}">🔙 Kthehu</a>
+    </div>
+{% endblock %}

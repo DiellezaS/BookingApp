@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+
+        <h2>Lista e Pronave</h2>
+        
+        <!-- Shfaqja e Pronave -->
+        <div class="row">
+            {% for property in properties %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ property.image.url }}" class="card-img-top" alt="{{ property.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ property.name }}</h5>
+                            <p class="card-text">{{ property.description }}</p>
+                            <a href="{% url 'property_detail' property.id %}" class="btn btn-primary">Shiko Detajet</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Njoftimet në dropdown -->
+    <div class="notification-dropdown" id="notificationDropdown" style="display:none;">
+        <ul>
+            {% for notification in notifications %}
+                <li>
+                    <a href="{% url 'mark_notification_as_read' notification.id %}">
+                        {{ notification.message }}
+                    </a>
+                </li>
+            {% empty %}
+                <li><a href="#">Nuk ka njoftime.</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

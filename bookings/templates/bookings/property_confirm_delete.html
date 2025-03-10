@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>⚠️ A je i sigurt që dëshiron të fshish këtë pronë?</h2>
+<p>{{ property.name }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">🗑️ Po, fshije</button>
+</form>
+
+<a href="{% url 'property_list' %}">❌ Anulo</a>
+{% endblock %}

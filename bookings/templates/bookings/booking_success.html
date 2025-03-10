@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container">
+    <h1>Reservation Successful!</h1>
+    <p>Thank you for your reservation. Your booking has been successfully confirmed!</p>
+    
+    <h3>Booking Details:</h3>
+    <ul>
+        <li><strong>Property:</strong> {{ property.name }}</li>
+        <li><strong>Description:</strong> {{ property.description }}</li>
+        <li><strong>Check-in:</strong> {{ booking.start_date }}</li>
+        <li><strong>Check-out:</strong> {{ booking.end_date }}</li>
+        <li><strong>Guests:</strong> {{ booking.guests }}</li>
+        <li><strong>Total Price:</strong> ${{ booking.total_price }}</li>
+    </ul>
+
+    <p>If you need to make any changes to your reservation, please contact us.</p>
+
+    <a href="{% url 'my_bookings' %}" class="btn btn-primary">View My Bookings</a>
+    <a href="{% url 'property_list' %}" class="btn btn-secondary">Back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Update this Booking</h2>
+
+    <div class="property-details mb-4">
+        <h3>Property Details</h3>
+        <div class="property-info">
+            <div class="property-image">
+                <!-- Shto imazhin e pronës -->
+                <img src="{{ property.image.url }}" alt="{{ property.name }}" class="img-fluid">
+            </div>
+            <div class="property-info-text">
+                <h4>{{ property.name }}</h4>
+                <p><strong>Description:</strong> {{ property.description }}</p>
+                <p><strong>Location:</strong> {{ property.location }}</p>
+                <p><strong>Price per Night:</strong> ${{ property.price_per_night }}</p>
+                <p><strong>Available From:</strong> {{ property.start_date }}</p>
+                <p><strong>Available Until:</strong> {{ property.end_date }}</p>
+                <p><strong>Maximum Guests:</strong> {{ property.max_guests }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulari për krijimin e rezervimit -->
+    <h3>Booking Form</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </form>
+
+    <a href="{% url 'property_list' %}" class="btn btn-secondary mt-3">Back to Property List</a>
+</div>
+{% endblock %}

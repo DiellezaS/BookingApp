@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Modifiko Pronën</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">💾 Ruaj Ndryshimet</button>
+</form>
+<a href="{% url 'property_list' %}">🔙 Kthehu</a>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Your Properties</h2>
+    <ul>
+        {% for property in properties %}
+            <li>
+                <h3>{{ property.name }}</h3>
+                <p>{{ property.location }}</p>
+                <p>Reserved Dates:</p>
+                <ul>
+                    {% for booking in bookings[property] %}
+                        <li>
+                            Reserved by {{ booking.user.username }} from {{ booking.start_date }} to {{ booking.end_date }}
+                        </li>
+                    {% empty %}
+                        <li>No bookings yet.</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
